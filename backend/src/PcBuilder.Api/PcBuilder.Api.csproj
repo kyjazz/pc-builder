@@ -16,6 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Copied next to the dll so the seeder finds it both locally and on Azure. -->
+    <None Update="Data\Seed\parts.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PcBuilder.Core\PcBuilder.Core.csproj" />
   </ItemGroup>
 

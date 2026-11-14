@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PcBuilder.Api.Data;
+using PcBuilder.Api.Data.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,15 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+// Fill an empty database with the starter parts catalogue.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("DbSeeder");
+    var seedFile = Path.Combine(AppContext.BaseDirectory, "Data", "Seed", "parts.json");
+    await DbSeeder.SeedPartsAsync(db, seedFile, logger);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -32,4 +42,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
