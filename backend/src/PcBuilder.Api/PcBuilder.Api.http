@@ -1,0 +1,6 @@
+@PcBuilder.Api_HostAddress = http://localhost:5129
+
+GET {{PcBuilder.Api_HostAddress}}/openapi/v1.json
+Accept: application/json
+
+###
