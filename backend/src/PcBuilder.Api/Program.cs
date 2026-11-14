@@ -20,9 +20,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IPartService, PartService>();
 
+// Enums travel as text in JSON ("Gpu", "DDR5"), matching the mobile app's TypeScript types.
+// Two separate option sets must agree on this:
+//  - MVC JsonOptions: used when controllers serialize responses
+//  - HTTP JsonOptions: used by Microsoft.AspNetCore.OpenApi to build the schema
+// Without the second one, the docs would show enums as integers while the API sends strings.
+static void UseStringEnums(System.Text.Json.JsonSerializerOptions options) =>
+    options.Converters.Add(new JsonStringEnumConverter());
+
 builder.Services.AddControllers()
-    // Enums travel as text in JSON ("Gpu", "DDR5"), matching the mobile app's TypeScript types.
-    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    .AddJsonOptions(o => UseStringEnums(o.JsonSerializerOptions));
+builder.Services.ConfigureHttpJsonOptions(o => UseStringEnums(o.SerializerOptions));
 
 // Every error response (404, 400, unhandled exception) uses the ProblemDetails format.
 builder.Services.AddProblemDetails();
