@@ -1,4 +1,5 @@
 using PcBuilder.Core.Entities;
+using PcBuilder.Core.Enums;
 
 namespace PcBuilder.Core.Compatibility;
 
@@ -25,6 +26,12 @@ public record BuildSnapshot
 
     /// <summary>Total RAM capacity across every kit.</summary>
     public int TotalRamGb => RamKits.Sum(kit => kit.TotalCapacityGb);
+
+    /// <summary>Drives that need an M.2 slot on the motherboard.</summary>
+    public int M2DriveCount => Storages.Count(drive => drive.Interface == StorageInterface.M2);
+
+    /// <summary>Drives that need a SATA port (SATA SSDs and HDDs).</summary>
+    public int SataDriveCount => Storages.Count(drive => drive.Interface == StorageInterface.Sata);
 
     /// <summary>A completely empty selection.</summary>
     public static BuildSnapshot Empty { get; } = new();

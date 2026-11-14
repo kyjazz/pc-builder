@@ -88,6 +88,33 @@ internal static class TestParts
         IsModular = true
     };
 
+    public static Storage M2Ssd(string name = "Test NVMe") => new()
+    {
+        Name = name,
+        Brand = "Test",
+        StorageType = StorageType.NvmeSsd,
+        Interface = StorageInterface.M2,
+        CapacityGb = 1000
+    };
+
+    public static Storage SataSsd(string name = "Test SATA SSD") => new()
+    {
+        Name = name,
+        Brand = "Test",
+        StorageType = StorageType.SataSsd,
+        Interface = StorageInterface.Sata,
+        CapacityGb = 1000
+    };
+
+    public static Storage Hdd(string name = "Test HDD") => new()
+    {
+        Name = name,
+        Brand = "Test",
+        StorageType = StorageType.Hdd,
+        Interface = StorageInterface.Sata,
+        CapacityGb = 2000
+    };
+
     public static Gpu Gpu(
         string name = "Test GPU",
         int tdp = 200,

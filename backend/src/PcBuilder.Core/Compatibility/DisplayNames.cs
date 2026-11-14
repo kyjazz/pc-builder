@@ -12,4 +12,16 @@ internal static class DisplayNames
         FormFactor.MiniITX => "Mini-ITX",
         _ => formFactor.ToString()
     };
+
+    public static string Of(PartCategory category) => category switch
+    {
+        PartCategory.Cpu => "işlemci",
+        PartCategory.Motherboard => "anakart",
+        PartCategory.Ram => "RAM",
+        PartCategory.Gpu => "ekran kartı",
+        PartCategory.Psu => "güç kaynağı",
+        PartCategory.Case => "kasa",
+        PartCategory.Storage => "depolama",
+        _ => category.ToString()
+    };
 }
