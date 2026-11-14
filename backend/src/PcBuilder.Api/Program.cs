@@ -19,6 +19,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         sql.UseCompatibilityLevel(140)));
 
 builder.Services.AddScoped<IPartService, PartService>();
+builder.Services.AddCompatibilityEngine();
 
 // Enums travel as text in JSON ("Gpu", "DDR5"), matching the mobile app's TypeScript types.
 // Two separate option sets must agree on this:

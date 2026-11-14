@@ -24,6 +24,34 @@ Accept: application/json
 GET {{PcBuilder.Api_HostAddress}}/api/parts/99999
 Accept: application/json
 
+### Compatibility check: valid build (ids from the current seed order)
+# 9700X, B650 Tomahawk, 32 GB DDR5, RTX 4070 Super, RM750e, 4000D, 990 Pro -> only R13 info
+POST {{PcBuilder.Api_HostAddress}}/api/compatibility/check
+Content-Type: application/json
+
+{
+  "items": [
+    { "partId": 19 }, { "partId": 45 }, { "partId": 76 }, { "partId": 30 },
+    { "partId": 60 }, { "partId": 1 }, { "partId": 83 }
+  ]
+}
+
+### Compatibility check: AM4 CPU on AM5 board, ATX board in Mini-ITX case -> R01, R05 errors
+POST {{PcBuilder.Api_HostAddress}}/api/compatibility/check
+Content-Type: application/json
+
+{
+  "items": [{ "partId": 13 }, { "partId": 45 }, { "partId": 12 }]
+}
+
+### Compatibility check: two RAM kits (quantity counts toward price, slots and capacity)
+POST {{PcBuilder.Api_HostAddress}}/api/compatibility/check
+Content-Type: application/json
+
+{
+  "items": [{ "partId": 45 }, { "partId": 76, "quantity": 2 }]
+}
+
 ### OpenAPI document
 GET {{PcBuilder.Api_HostAddress}}/openapi/v1.json
 Accept: application/json

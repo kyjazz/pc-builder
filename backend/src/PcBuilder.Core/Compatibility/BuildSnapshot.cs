@@ -33,6 +33,16 @@ public record BuildSnapshot
     /// <summary>Drives that need a SATA port (SATA SSDs and HDDs).</summary>
     public int SataDriveCount => Storages.Count(drive => drive.Interface == StorageInterface.Sata);
 
+    /// <summary>Every selected part, one entry per physical unit.</summary>
+    public IEnumerable<Part> AllParts =>
+        new Part?[] { Cpu, Motherboard, Gpu, Psu, Case }
+            .OfType<Part>()
+            .Concat(RamKits)
+            .Concat(Storages);
+
+    /// <summary>Sum of all part prices; repeated kits/drives are counted once per unit.</summary>
+    public decimal TotalPrice => AllParts.Sum(part => part.Price);
+
     /// <summary>A completely empty selection.</summary>
     public static BuildSnapshot Empty { get; } = new();
 }

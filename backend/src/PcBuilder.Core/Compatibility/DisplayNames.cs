@@ -2,8 +2,8 @@ using PcBuilder.Core.Enums;
 
 namespace PcBuilder.Core.Compatibility;
 
-/// <summary>Human-readable names used inside Turkish rule messages.</summary>
-internal static class DisplayNames
+/// <summary>Human-readable Turkish names used in rule messages and API validation messages.</summary>
+public static class DisplayNames
 {
     public static string Of(FormFactor formFactor) => formFactor switch
     {
