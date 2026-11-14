@@ -73,7 +73,7 @@ public class PsuCapacityRuleTests
     [Fact]
     public void PsuWithoutCpuOrGpu_RuleIsSkipped()
     {
-        // Estimate would be the flat 100 W, which says nothing about this PSU.
+        // Nothing draws power yet (estimate 0 W), so there is nothing to judge this PSU against.
         var build = new BuildSnapshot { Psu = TestParts.Psu(wattage: 50) };
 
         Assert.Empty(_rule.Check(build));

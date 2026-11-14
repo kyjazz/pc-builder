@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PcBuilder.Api.Data;
 using PcBuilder.Api.Data.Seed;
 using PcBuilder.Api.Services;
+using PcBuilder.Api.Validation;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,12 +30,32 @@ builder.Services.AddCompatibilityEngine();
 static void UseStringEnums(System.Text.Json.JsonSerializerOptions options) =>
     options.Converters.Add(new JsonStringEnumConverter());
 
-builder.Services.AddControllers()
-    .AddJsonOptions(o => UseStringEnums(o.JsonSerializerOptions));
+builder.Services.AddControllers(o =>
+    {
+        TurkishValidationMessages.Apply(o.ModelBindingMessageProvider);
+        // Nullable reference types would otherwise add a hidden [Required] with an English message
+        // to every non-nullable parameter/property. Required fields get an explicit Turkish [Required].
+        o.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+    })
+    .AddJsonOptions(o =>
+    {
+        UseStringEnums(o.JsonSerializerOptions);
+        // Hide System.Text.Json's English parser messages; a Turkish message is filled in instead.
+        o.AllowInputFormatterExceptionMessages = false;
+    })
+    .ConfigureApiBehaviorOptions(o =>
+    {
+        var defaultFactory = o.InvalidModelStateResponseFactory;
+        o.InvalidModelStateResponseFactory = context =>
+        {
+            TurkishValidationMessages.FillMissingMessages(context.ModelState);
+            return defaultFactory(context);
+        };
+    });
 builder.Services.ConfigureHttpJsonOptions(o => UseStringEnums(o.SerializerOptions));
 
 // Every error response (404, 400, unhandled exception) uses the ProblemDetails format.
-builder.Services.AddProblemDetails();
+builder.Services.AddProblemDetails(o => o.CustomizeProblemDetails = TurkishValidationMessages.TranslateTitle);
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

@@ -110,7 +110,7 @@ Her kural ayrı bir sınıftır ve `ICompatibilityRule` arayüzünü uygular. `C
 | R13 | CPU kutusundan soğutucu çıkmıyor | Info |
 | R14 | Zorunlu kategori eksik | Info |
 
-Güç hesabı: tahmini tüketim = CPU TDP + GPU TDP + 100 W. Önerilen PSU = tahmini × 1.2, en yakın 50 W'a yukarı yuvarlanır.
+Güç hesabı: tahmini tüketim = CPU TDP + GPU TDP + 100 W. Önerilen PSU = tahmini × 1.2, en yakın 50 W'a yukarı yuvarlanır. CPU ve GPU'nun ikisi de seçilmemişse ikisi de 0 döner.
 
 ```csharp
 public enum Severity { Info, Warning, Error }

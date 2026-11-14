@@ -16,7 +16,7 @@ public class PartListQuery
 {
     public PartCategory? Category { get; init; }
 
-    [MaxLength(100)]
+    [MaxLength(100, ErrorMessage = "Arama metni en fazla 100 karakter olabilir.")]
     public string? Search { get; init; }
 
     public PartSort Sort { get; init; } = PartSort.Name;

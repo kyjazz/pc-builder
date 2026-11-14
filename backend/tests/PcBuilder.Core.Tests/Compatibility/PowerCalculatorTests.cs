@@ -17,9 +17,34 @@ public class PowerCalculatorTests
     }
 
     [Fact]
-    public void EstimateWattage_MissingCpuAndGpu_CountAsZero()
+    public void NoCpuAndNoGpu_EstimateAndRecommendationAreZero()
     {
-        Assert.Equal(100, PowerCalculator.EstimateWattage(BuildSnapshot.Empty));
+        Assert.Equal(0, PowerCalculator.EstimateWattage(BuildSnapshot.Empty));
+        Assert.Equal(0, PowerCalculator.RecommendedPsuWattage(BuildSnapshot.Empty));
+    }
+
+    [Fact]
+    public void OnlyNonConsumingParts_EstimateIsZero()
+    {
+        // Motherboard, RAM, PSU, case and drives alone don't trigger the flat 100 W.
+        var build = new BuildSnapshot
+        {
+            Motherboard = TestParts.Motherboard(),
+            RamKits = [TestParts.RamKit()],
+            Psu = TestParts.Psu(),
+            Case = TestParts.Case(),
+            Storages = [TestParts.M2Ssd()]
+        };
+
+        Assert.Equal(0, PowerCalculator.EstimateWattage(build));
+    }
+
+    [Fact]
+    public void GpuOnly_IncludesBaseSystemWatts()
+    {
+        var build = new BuildSnapshot { Gpu = TestParts.Gpu(tdp: 200) };
+
+        Assert.Equal(300, PowerCalculator.EstimateWattage(build));
     }
 
     [Fact]

@@ -65,7 +65,7 @@ public class PsuHeadroomRuleTests
     [Fact]
     public void PsuWithoutCpuOrGpu_RuleIsSkipped()
     {
-        // Estimate would be 100 W, minimum 120 W; a 110 W PSU must not trigger a warning.
+        // Nothing draws power yet (estimate 0 W); a tiny PSU must not trigger a warning.
         var build = new BuildSnapshot { Psu = TestParts.Psu(wattage: 110) };
 
         Assert.Empty(_rule.Check(build));

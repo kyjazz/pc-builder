@@ -6,19 +6,19 @@ namespace PcBuilder.Api.Dtos;
 /// <summary>One selected part. Same shape as a BuildItems row, so saved builds can be checked as-is.</summary>
 public class BuildItemRequest
 {
-    [Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue, ErrorMessage = "Parça kimliği pozitif bir sayı olmalı.")]
     public int PartId { get; init; }
 
     /// <summary>Only RAM kits and drives may be more than 1.</summary>
-    [Range(1, 10)]
+    [Range(1, 10, ErrorMessage = "Adet 1 ile 10 arasında olmalı.")]
     public int Quantity { get; init; } = 1;
 }
 
-/// <summary>Body of POST /api/compatibility/check. The server works out each part's category.</summary>
+/// <summary>Body of POST /api/compatibility/check and /api/parts/compatible. The server works out each part's category.</summary>
 public class CompatibilityCheckRequest
 {
-    [Required]
-    [MaxLength(30)]
+    [Required(ErrorMessage = "Parça listesi gönderilmeli.")]
+    [MaxLength(30, ErrorMessage = "Bir sistemde en fazla 30 kalem olabilir.")]
     public List<BuildItemRequest> Items { get; init; } = [];
 }
 

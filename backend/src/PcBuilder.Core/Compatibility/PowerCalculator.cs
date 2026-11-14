@@ -14,16 +14,26 @@ public static class PowerCalculator
     /// <summary>PSUs are sold in 50 W steps, so the recommendation is rounded up to one.</summary>
     public const int PsuStepWatts = 50;
 
-    /// <summary>CPU TDP + GPU TDP + 100 W. Missing parts count as 0 W.</summary>
+    /// <summary>
+    /// CPU TDP + GPU TDP + 100 W; a missing CPU or GPU counts as 0 W.
+    /// With neither selected there is nothing to power yet, so the result is 0
+    /// (otherwise an empty build would show a misleading "100 W").
+    /// </summary>
     public static int EstimateWattage(BuildSnapshot build)
     {
         ArgumentNullException.ThrowIfNull(build);
+
+        if (!HasPowerConsumers(build))
+        {
+            return 0;
+        }
+
         return (build.Cpu?.Tdp ?? 0) + (build.Gpu?.Tdp ?? 0) + BaseSystemWatts;
     }
 
     /// <summary>
-    /// True when a CPU or GPU is selected. Without either, the estimate is just the flat
-    /// 100 W and judging a PSU against it would be meaningless, so PSU rules skip.
+    /// True when a CPU or GPU is selected. Without either, the estimate is 0 W and
+    /// judging a PSU against it would be meaningless, so PSU rules skip.
     /// </summary>
     public static bool HasPowerConsumers(BuildSnapshot build) =>
         build.Cpu is not null || build.Gpu is not null;
