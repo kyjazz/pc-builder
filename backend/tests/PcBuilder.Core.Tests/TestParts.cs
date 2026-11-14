@@ -77,6 +77,17 @@ internal static class TestParts
         MaxCoolerHeightMm = maxCoolerHeightMm
     };
 
+    public static Psu Psu(
+        string name = "Test PSU",
+        int wattage = 750) => new()
+    {
+        Name = name,
+        Brand = "Test",
+        Wattage = wattage,
+        EfficiencyRating = "80+ Gold",
+        IsModular = true
+    };
+
     public static Gpu Gpu(
         string name = "Test GPU",
         int tdp = 200,

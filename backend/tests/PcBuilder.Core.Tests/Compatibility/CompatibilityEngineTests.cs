@@ -124,4 +124,36 @@ public class CompatibilityEngineTests
         Assert.False(result.IsCompatible);
         Assert.Equal(["R02", "R03", "R04"], result.Issues.Select(i => i.RuleCode));
     }
+
+    [Fact]
+    public void WithRealRules_GpuAndPowerProblemsAreSortedErrorFirst()
+    {
+        var engine = new CompatibilityEngine(
+        [
+            new GpuRecommendedPsuRule(),
+            new PsuHeadroomRule(),
+            new PsuCapacityRule(),
+            new GpuLengthRule()
+        ]);
+
+        // Ryzen 7 9800X3D (120 W) + RTX 5090 (575 W, 358 mm, maker wants 1000 W)
+        // in an A4-H2O (322 mm) with an 850 W PSU.
+        // Estimate 795 W -> 850 W covers it (no R07), but 795 × 1.2 = 954 W > 850 W (R08 Warning).
+        // 850 W < 1000 W (R09 Warning). 358 mm > 322 mm (R06 Error).
+        var build = new BuildSnapshot
+        {
+            Cpu = TestParts.Cpu(tdp: 120),
+            Gpu = TestParts.Gpu(tdp: 575, lengthMm: 358, recommendedPsuW: 1000),
+            Psu = TestParts.Psu(wattage: 850),
+            Case = TestParts.Case(maxGpuLengthMm: 322)
+        };
+
+        var result = engine.Check(build);
+
+        Assert.False(result.IsCompatible);
+        Assert.Equal(["R06", "R08", "R09"], result.Issues.Select(i => i.RuleCode));
+        Assert.Equal(
+            [Severity.Error, Severity.Warning, Severity.Warning],
+            result.Issues.Select(i => i.Severity));
+    }
 }

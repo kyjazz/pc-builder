@@ -21,9 +21,20 @@ public static class PowerCalculator
         return (build.Cpu?.Tdp ?? 0) + (build.Gpu?.Tdp ?? 0) + BaseSystemWatts;
     }
 
+    /// <summary>
+    /// True when a CPU or GPU is selected. Without either, the estimate is just the flat
+    /// 100 W and judging a PSU against it would be meaningless, so PSU rules skip.
+    /// </summary>
+    public static bool HasPowerConsumers(BuildSnapshot build) =>
+        build.Cpu is not null || build.Gpu is not null;
+
+    /// <summary>Estimate × 1.2, not rounded. A PSU below this has less than 20% headroom.</summary>
+    public static decimal MinimumWattageWithHeadroom(BuildSnapshot build) =>
+        EstimateWattage(build) * HeadroomFactor;
+
     /// <summary>Estimate × 1.2, rounded up to the next multiple of 50 W.</summary>
     public static int RecommendedPsuWattage(BuildSnapshot build) =>
-        RoundUpToPsuStep(EstimateWattage(build) * HeadroomFactor);
+        RoundUpToPsuStep(MinimumWattageWithHeadroom(build));
 
     // decimal, not double: 1.2 has no exact binary representation, so double results
     // can land a hair above a 50 W boundary and round up one step too far. decimal stores

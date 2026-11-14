@@ -30,6 +30,23 @@ public class PowerCalculatorTests
         Assert.Equal(165, PowerCalculator.EstimateWattage(build));
     }
 
+    [Fact]
+    public void HasPowerConsumers_TrueWithCpuOrGpu_FalseWithNeither()
+    {
+        Assert.True(PowerCalculator.HasPowerConsumers(new BuildSnapshot { Cpu = TestParts.Cpu() }));
+        Assert.True(PowerCalculator.HasPowerConsumers(new BuildSnapshot { Gpu = TestParts.Gpu() }));
+        Assert.False(PowerCalculator.HasPowerConsumers(new BuildSnapshot { Psu = TestParts.Psu() }));
+    }
+
+    [Fact]
+    public void MinimumWattageWithHeadroom_IsEstimateTimesOnePointTwo_NotRounded()
+    {
+        // 65 + 200 + 100 = 365 W -> 438.0 W (recommended would round this to 450)
+        var build = new BuildSnapshot { Cpu = TestParts.Cpu(tdp: 65), Gpu = TestParts.Gpu(tdp: 200) };
+
+        Assert.Equal(438.0m, PowerCalculator.MinimumWattageWithHeadroom(build));
+    }
+
     [Theory]
     // cpu + gpu + 100 = estimate -> × 1.2 -> rounded up to 50
     [InlineData(65, 85, 300)]    // 250 × 1.2 = 300.0  -> exactly on a step, must NOT round up to 350
