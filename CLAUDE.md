@@ -153,7 +153,7 @@ Hatalar `ProblemDetails` formatında döner. Şifreler `PasswordHasher<T>` ile h
 ## İlerleme
 
 - [x] Hafta 1
-- [ ] Hafta 2
+- [x] Hafta 2
 - [ ] Hafta 3
 - [ ] Hafta 4
 - [ ] Hafta 5
