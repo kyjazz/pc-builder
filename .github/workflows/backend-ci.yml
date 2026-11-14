@@ -1,0 +1,68 @@
+# Builds the .NET solution and runs the xUnit tests on every push and pull request.
+# The tests don't need a database (compatibility rules live in PcBuilder.Core),
+# so a plain Ubuntu runner without SQL Server is enough.
+name: Backend CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
+  # Allows a manual run from the GitHub "Actions" tab.
+  workflow_dispatch:
+
+# The workflow only reads the repository.
+permissions:
+  contents: read
+
+# A newer push to the same branch cancels the older, still-running build.
+concurrency:
+  group: backend-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore packages
+        run: dotnet restore PcBuilder.sln
+
+      # -warnaserror: a new compiler warning fails the build, so the codebase stays at 0 warnings.
+      - name: Build
+        run: dotnet build PcBuilder.sln --no-restore --configuration Release -warnaserror
+
+      - name: Test
+        run: >
+          dotnet test PcBuilder.sln --no-build --configuration Release
+          --logger "trx;LogFileName=test-results.trx"
+          --results-directory TestResults
+
+      # Keep the test report even when tests fail, so it can be downloaded from the run page.
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: backend/TestResults/*.trx
+          if-no-files-found: warn
