@@ -1,6 +1,8 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using PcBuilder.Api.Dtos;
 using PcBuilder.Api.Services;
+using PcBuilder.Core.Enums;
 
 namespace PcBuilder.Api.Controllers;
 
@@ -30,5 +32,27 @@ public class PartsController(IPartService partService) : ControllerBase
 
         // NotFound() is turned into a ProblemDetails body by [ApiController].
         return part is null ? NotFound() : Ok(part);
+    }
+
+    /// <summary>
+    /// Lists parts of one category that can be added to the current selection without a new Error.
+    /// Used by the mobile "Sadece uyumlular" filter. POST because the selection travels in the body.
+    /// Example: POST /api/parts/compatible?category=Gpu with { "items": [{ "partId": 12 }] }
+    /// </summary>
+    [HttpPost("compatible")]
+    [ProducesResponseType<IReadOnlyList<PartSummaryDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IReadOnlyList<PartSummaryDto>>> GetCompatibleParts(
+        [FromQuery, Required(ErrorMessage = "Kategori belirtilmeli.")] PartCategory? category,
+        CompatibilityCheckRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await partService.GetCompatiblePartsAsync(category!.Value, request.Items, cancellationToken);
+        if (!result.Succeeded)
+        {
+            return this.ToValidationProblem(result.Errors);
+        }
+
+        return Ok(result.Value);
     }
 }

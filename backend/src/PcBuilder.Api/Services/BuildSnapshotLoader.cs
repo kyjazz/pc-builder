@@ -7,17 +7,6 @@ using PcBuilder.Core.Enums;
 
 namespace PcBuilder.Api.Services;
 
-/// <summary>Either a ready snapshot or user-facing validation errors (field name -> messages).</summary>
-public record SnapshotLoadResult(BuildSnapshot? Snapshot, IReadOnlyDictionary<string, string[]> Errors)
-{
-    public bool Succeeded => Snapshot is not null;
-
-    public static SnapshotLoadResult Success(BuildSnapshot snapshot) => new(snapshot, new Dictionary<string, string[]>());
-
-    public static SnapshotLoadResult Failure(string field, params string[] messages) =>
-        new(null, new Dictionary<string, string[]> { [field] = messages });
-}
-
 /// <summary>
 /// Turns a list of (partId, quantity) into a BuildSnapshot the compatibility engine can read.
 /// This is the bridge between the database and the database-free rules in PcBuilder.Core.
@@ -31,7 +20,7 @@ public class BuildSnapshotLoader(AppDbContext db)
 
     private const string ItemsField = "items";
 
-    public async Task<SnapshotLoadResult> LoadAsync(
+    public async Task<ServiceResult<BuildSnapshot>> LoadAsync(
         IEnumerable<BuildItemRequest> items, CancellationToken cancellationToken)
     {
         // The same part sent twice is treated as one line with the quantities added up.
@@ -50,7 +39,7 @@ public class BuildSnapshotLoader(AppDbContext db)
         var unknownIds = ids.Where(id => !parts.ContainsKey(id)).Order().ToList();
         if (unknownIds.Count > 0)
         {
-            return SnapshotLoadResult.Failure(ItemsField, $"Parça bulunamadı: {string.Join(", ", unknownIds)}.");
+            return ServiceResult<BuildSnapshot>.Failure(ItemsField, $"Parça bulunamadı: {string.Join(", ", unknownIds)}.");
         }
 
         var tooMany = quantities
@@ -63,10 +52,10 @@ public class BuildSnapshotLoader(AppDbContext db)
 
         if (tooMany.Length > 0)
         {
-            return SnapshotLoadResult.Failure(ItemsField, tooMany);
+            return ServiceResult<BuildSnapshot>.Failure(ItemsField, tooMany);
         }
 
-        return SnapshotLoadResult.Success(ToSnapshot(quantities, parts));
+        return ServiceResult<BuildSnapshot>.Success(ToSnapshot(quantities, parts));
     }
 
     private static BuildSnapshot ToSnapshot(Dictionary<int, int> quantities, Dictionary<int, Part> parts)

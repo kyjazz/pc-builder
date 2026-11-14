@@ -52,6 +52,22 @@ Content-Type: application/json
   "items": [{ "partId": 45 }, { "partId": 76, "quantity": 2 }]
 }
 
+### Compatible parts: GPUs that fit an A4-H2O case (322 mm) -> 9 cards
+POST {{PcBuilder.Api_HostAddress}}/api/parts/compatible?category=Gpu
+Content-Type: application/json
+
+{
+  "items": [{ "partId": 12 }]
+}
+
+### Compatible parts: CPUs for the MAG B650 Tomahawk WiFi (AM5) -> 5 Ryzen CPUs
+POST {{PcBuilder.Api_HostAddress}}/api/parts/compatible?category=Cpu
+Content-Type: application/json
+
+{
+  "items": [{ "partId": 45 }]
+}
+
 ### OpenAPI document
 GET {{PcBuilder.Api_HostAddress}}/openapi/v1.json
 Accept: application/json

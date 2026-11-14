@@ -6,6 +6,13 @@ namespace PcBuilder.Api.Dtos;
 /// <summary>Entity -> DTO conversion. Entities never leave the API directly.</summary>
 public static class PartMappings
 {
+    /// <summary>
+    /// In-memory version of the list projection in PartService.GetPartsAsync,
+    /// for parts that are already loaded (e.g. after compatibility filtering).
+    /// </summary>
+    public static PartSummaryDto ToSummaryDto(this Part part) => new(
+        part.Id, part.Name, part.Brand, part.Category, part.Price, part.Tdp, part.ImageUrl);
+
     public static PartDetailDto ToDetailDto(this Part part) => new(
         part.Id,
         part.Name,

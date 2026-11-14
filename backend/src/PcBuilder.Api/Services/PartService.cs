@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using PcBuilder.Api.Data;
 using PcBuilder.Api.Dtos;
+using PcBuilder.Core.Compatibility;
+using PcBuilder.Core.Enums;
 
 namespace PcBuilder.Api.Services;
 
@@ -8,10 +10,38 @@ public interface IPartService
 {
     Task<IReadOnlyList<PartSummaryDto>> GetPartsAsync(PartListQuery query, CancellationToken cancellationToken);
     Task<PartDetailDto?> GetPartAsync(int id, CancellationToken cancellationToken);
+
+    Task<ServiceResult<IReadOnlyList<PartSummaryDto>>> GetCompatiblePartsAsync(
+        PartCategory category, IEnumerable<BuildItemRequest> selection, CancellationToken cancellationToken);
 }
 
-public class PartService(AppDbContext db) : IPartService
+public class PartService(
+    AppDbContext db,
+    BuildSnapshotLoader snapshotLoader,
+    CompatibilityEngine engine) : IPartService
 {
+    public async Task<ServiceResult<IReadOnlyList<PartSummaryDto>>> GetCompatiblePartsAsync(
+        PartCategory category, IEnumerable<BuildItemRequest> selection, CancellationToken cancellationToken)
+    {
+        var load = await snapshotLoader.LoadAsync(selection, cancellationToken);
+        if (!load.Succeeded)
+        {
+            return ServiceResult<IReadOnlyList<PartSummaryDto>>.Failure(load.Errors);
+        }
+
+        // A category has 10-15 parts, so running the rules once per candidate in memory is cheap.
+        var candidates = await db.Parts.AsNoTracking()
+            .Where(p => p.IsActive && p.Category == category)
+            .OrderBy(p => p.Name).ThenBy(p => p.Id)
+            .ToListAsync(cancellationToken);
+
+        var compatible = engine.FilterCompatible(load.Value!, category, candidates)
+            .Select(p => p.ToSummaryDto())
+            .ToList();
+
+        return ServiceResult<IReadOnlyList<PartSummaryDto>>.Success(compatible);
+    }
+
     public async Task<IReadOnlyList<PartSummaryDto>> GetPartsAsync(
         PartListQuery query, CancellationToken cancellationToken)
     {

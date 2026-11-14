@@ -43,6 +43,37 @@ public record BuildSnapshot
     /// <summary>Sum of all part prices; repeated kits/drives are counted once per unit.</summary>
     public decimal TotalPrice => AllParts.Sum(part => part.Price);
 
+    /// <summary>
+    /// Removes the selected part of a single-slot category (CPU, motherboard, GPU, PSU, case)
+    /// so a candidate can take its place. RAM and storage are left as they are, because
+    /// candidates in those categories are added next to what is already selected.
+    /// </summary>
+    public BuildSnapshot Without(PartCategory category) => category switch
+    {
+        PartCategory.Cpu => this with { Cpu = null },
+        PartCategory.Motherboard => this with { Motherboard = null },
+        PartCategory.Gpu => this with { Gpu = null },
+        PartCategory.Psu => this with { Psu = null },
+        PartCategory.Case => this with { Case = null },
+        _ => this
+    };
+
+    /// <summary>
+    /// Returns a copy with the part added: single-slot parts replace the current one,
+    /// a RAM kit or drive is appended as one more unit. The original snapshot is unchanged.
+    /// </summary>
+    public BuildSnapshot With(Part part) => part switch
+    {
+        Cpu cpu => this with { Cpu = cpu },
+        Motherboard motherboard => this with { Motherboard = motherboard },
+        Gpu gpu => this with { Gpu = gpu },
+        Psu psu => this with { Psu = psu },
+        Case pcCase => this with { Case = pcCase },
+        RamKit kit => this with { RamKits = [.. RamKits, kit] },
+        Storage drive => this with { Storages = [.. Storages, drive] },
+        _ => throw new NotSupportedException($"Unknown part type {part.GetType().Name}.")
+    };
+
     /// <summary>A completely empty selection.</summary>
     public static BuildSnapshot Empty { get; } = new();
 }

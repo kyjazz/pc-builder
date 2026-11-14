@@ -23,19 +23,10 @@ public class CompatibilityController(BuildSnapshotLoader snapshotLoader, Compati
         var load = await snapshotLoader.LoadAsync(request.Items, cancellationToken);
         if (!load.Succeeded)
         {
-            foreach (var (field, messages) in load.Errors)
-            {
-                foreach (var message in messages)
-                {
-                    ModelState.AddModelError(field, message);
-                }
-            }
-
-            // Same ValidationProblemDetails shape as the automatic [ApiController] 400s.
-            return ValidationProblem();
+            return this.ToValidationProblem(load.Errors);
         }
 
-        var result = engine.Check(load.Snapshot!);
-        return Ok(result.ToResponse(load.Snapshot!));
+        var snapshot = load.Value!;
+        return Ok(engine.Check(snapshot).ToResponse(snapshot));
     }
 }
