@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PcBuilder.Api.Data;
 using PcBuilder.Api.Data.Seed;
 using PcBuilder.Api.Services;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +49,10 @@ app.UseStatusCodePages();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    // /openapi/v1.json: machine-readable API description.
     app.MapOpenApi();
+    // /scalar: interactive docs page built from that JSON (development only).
+    app.MapScalarApiReference(options => options.WithTitle("PC Builder API"));
 }
 
 app.UseHttpsRedirection();
