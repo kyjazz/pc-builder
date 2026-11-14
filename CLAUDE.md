@@ -134,6 +134,13 @@ Hata mesajları Türkçe, kullanıcıya gösterilecek şekilde yazılır.
 
 Hatalar `ProblemDetails` formatında döner. Şifreler `PasswordHasher<T>` ile hash'lenir. API dokümantasyonu için OpenAPI + Swagger UI veya Scalar kullanılır.
 
+### Doğrulama kuralları
+
+- Tüm doğrulama mesajları Türkçedir ve mobilde olduğu gibi gösterilir (`Validation/TurkishValidationMessages.cs`).
+- **Nullable'dan gelen örtük `[Required]` kapalıdır** (`SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true`). `string Email` gibi null olamayan bir alan artık kendiliğinden zorunlu değildir.
+- **Bu yüzden her zorunlu alana Türkçe mesajlı `[Required]` açıkça yazılmalıdır.** Örnek: `[Required(ErrorMessage = "E-posta adresi gerekli.")]`. Diğer attribute'lar da (`[EmailAddress]`, `[MinLength]`, `[MaxLength]`, `[Range]`) her zaman Türkçe `ErrorMessage` ile yazılır.
+- Servisler beklenen hatalar için exception atmaz, `ServiceResult<T>` döner. Controller bunu `this.ToValidationProblem(errors)` ile 400'e çevirir.
+
 ## Yol haritası
 
 1. **Hafta 1:** Çözüm ve projeler, entity'ler, TPT, ilk migration, seed verisi, GET /api/parts uçları
