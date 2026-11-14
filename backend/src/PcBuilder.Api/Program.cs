@@ -1,6 +1,8 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using PcBuilder.Api.Data;
 using PcBuilder.Api.Data.Seed;
+using PcBuilder.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +17,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         // generating T-SQL that only newer versions understand.
         sql.UseCompatibilityLevel(140)));
 
-builder.Services.AddControllers();
+builder.Services.AddScoped<IPartService, PartService>();
+
+builder.Services.AddControllers()
+    // Enums travel as text in JSON ("Gpu", "DDR5"), matching the mobile app's TypeScript types.
+    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+// Every error response (404, 400, unhandled exception) uses the ProblemDetails format.
+builder.Services.AddProblemDetails();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -29,6 +39,11 @@ using (var scope = app.Services.CreateScope())
     var seedFile = Path.Combine(AppContext.BaseDirectory, "Data", "Seed", "parts.json");
     await DbSeeder.SeedPartsAsync(db, seedFile, logger);
 }
+
+// Unhandled exceptions -> 500 ProblemDetails (no stack trace leaks to clients).
+app.UseExceptionHandler();
+// Bodiless error codes (e.g. 404 for an unknown route) -> ProblemDetails.
+app.UseStatusCodePages();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
