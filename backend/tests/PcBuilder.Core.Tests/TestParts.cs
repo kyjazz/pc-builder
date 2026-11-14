@@ -50,6 +50,33 @@ internal static class TestParts
         SataPorts = sataPorts
     };
 
+    public static RamKit RamKit(
+        string name = "Test RAM",
+        MemoryType memoryType = MemoryType.DDR5,
+        int moduleCount = 2,
+        int moduleSizeGb = 16) => new()
+    {
+        Name = name,
+        Brand = "Test",
+        MemoryType = memoryType,
+        ModuleCount = moduleCount,
+        ModuleSizeGb = moduleSizeGb,
+        SpeedMhz = 6000
+    };
+
+    public static Case Case(
+        string name = "Test Case",
+        FormFactorSupport supportedFormFactors = FormFactorSupport.ATX | FormFactorSupport.MicroATX | FormFactorSupport.MiniITX,
+        int maxGpuLengthMm = 360,
+        int maxCoolerHeightMm = 170) => new()
+    {
+        Name = name,
+        Brand = "Test",
+        SupportedFormFactors = supportedFormFactors,
+        MaxGpuLengthMm = maxGpuLengthMm,
+        MaxCoolerHeightMm = maxCoolerHeightMm
+    };
+
     public static Gpu Gpu(
         string name = "Test GPU",
         int tdp = 200,

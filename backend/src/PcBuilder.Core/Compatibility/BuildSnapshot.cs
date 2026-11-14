@@ -20,6 +20,12 @@ public record BuildSnapshot
     /// <summary>One entry per physical drive. Three identical SSDs = the same Storage listed three times.</summary>
     public IReadOnlyList<Storage> Storages { get; init; } = [];
 
+    /// <summary>Total RAM sticks across every kit (each needs its own slot).</summary>
+    public int TotalRamModules => RamKits.Sum(kit => kit.ModuleCount);
+
+    /// <summary>Total RAM capacity across every kit.</summary>
+    public int TotalRamGb => RamKits.Sum(kit => kit.TotalCapacityGb);
+
     /// <summary>A completely empty selection.</summary>
     public static BuildSnapshot Empty { get; } = new();
 }
