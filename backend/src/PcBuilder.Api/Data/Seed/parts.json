@@ -51,17 +51,17 @@
     { "name": "Dual GeForce RTX 4060 OC 8GB", "brand": "ASUS", "price": 13000, "tdp": 115, "gpuChip": "GeForce RTX 4060", "vramGb": 8, "lengthMm": 227, "recommendedPsuW": 550 },
     { "name": "GeForce RTX 4060 Ti Ventus 2X Black 8G OC", "brand": "MSI", "price": 17000, "tdp": 160, "gpuChip": "GeForce RTX 4060 Ti", "vramGb": 8, "lengthMm": 199, "recommendedPsuW": 550 },
     { "name": "GeForce RTX 4070 Super Windforce OC 12G", "brand": "Gigabyte", "price": 27000, "tdp": 220, "gpuChip": "GeForce RTX 4070 Super", "vramGb": 12, "lengthMm": 261, "recommendedPsuW": 650 },
-    { "name": "GeForce RTX 4070 Ti Super 16G Gaming X Slim", "brand": "MSI", "price": 36000, "tdp": 285, "gpuChip": "GeForce RTX 4070 Ti Super", "vramGb": 16, "lengthMm": 307, "recommendedPsuW": 750 },
+    { "name": "GeForce RTX 4070 Ti Super 16G Gaming X Slim", "brand": "MSI", "price": 36000, "tdp": 285, "gpuChip": "GeForce RTX 4070 Ti Super", "vramGb": 16, "lengthMm": 307, "recommendedPsuW": 700 },
     { "name": "TUF Gaming GeForce RTX 4080 Super 16GB", "brand": "ASUS", "price": 50000, "tdp": 320, "gpuChip": "GeForce RTX 4080 Super", "vramGb": 16, "lengthMm": 348, "recommendedPsuW": 850 },
-    { "name": "GeForce RTX 5070 12G Ventus 2X OC", "brand": "MSI", "price": 26000, "tdp": 250, "gpuChip": "GeForce RTX 5070", "vramGb": 12, "lengthMm": 209, "recommendedPsuW": 650 },
-    { "name": "GeForce RTX 5070 Ti Gaming OC 16G", "brand": "Gigabyte", "price": 40000, "tdp": 300, "gpuChip": "GeForce RTX 5070 Ti", "vramGb": 16, "lengthMm": 340, "recommendedPsuW": 750 },
+    { "name": "GeForce RTX 5070 12G Ventus 2X OC", "brand": "MSI", "price": 26000, "tdp": 250, "gpuChip": "GeForce RTX 5070", "vramGb": 12, "lengthMm": 236, "recommendedPsuW": 650 },
+    { "name": "GeForce RTX 5070 Ti Gaming OC 16G", "brand": "Gigabyte", "price": 40000, "tdp": 300, "gpuChip": "GeForce RTX 5070 Ti", "vramGb": 16, "lengthMm": 342, "recommendedPsuW": 750 },
     { "name": "TUF Gaming GeForce RTX 5080 16GB", "brand": "ASUS", "price": 55000, "tdp": 360, "gpuChip": "GeForce RTX 5080", "vramGb": 16, "lengthMm": 348, "recommendedPsuW": 850 },
     { "name": "ROG Astral GeForce RTX 5090 32GB", "brand": "ASUS", "price": 130000, "tdp": 575, "gpuChip": "GeForce RTX 5090", "vramGb": 32, "lengthMm": 358, "recommendedPsuW": 1000 },
     { "name": "Pulse Radeon RX 7600 8GB", "brand": "Sapphire", "price": 11000, "tdp": 165, "gpuChip": "Radeon RX 7600", "vramGb": 8, "lengthMm": 240, "recommendedPsuW": 550 },
     { "name": "Pulse Radeon RX 9060 XT 16GB", "brand": "Sapphire", "price": 17000, "tdp": 160, "gpuChip": "Radeon RX 9060 XT", "vramGb": 16, "lengthMm": 240, "recommendedPsuW": 450 },
     { "name": "Pulse Radeon RX 7800 XT 16GB", "brand": "Sapphire", "price": 23000, "tdp": 263, "gpuChip": "Radeon RX 7800 XT", "vramGb": 16, "lengthMm": 280, "recommendedPsuW": 700 },
     { "name": "Pulse Radeon RX 9070 XT 16GB", "brand": "Sapphire", "price": 32000, "tdp": 304, "gpuChip": "Radeon RX 9070 XT", "vramGb": 16, "lengthMm": 320, "recommendedPsuW": 750 },
-    { "name": "Hellhound Radeon RX 7900 XT 20GB", "brand": "PowerColor", "price": 35000, "tdp": 315, "gpuChip": "Radeon RX 7900 XT", "vramGb": 20, "lengthMm": 322, "recommendedPsuW": 750 }
+    { "name": "Hellhound Radeon RX 7900 XT 20GB", "brand": "PowerColor", "price": 35000, "tdp": 315, "gpuChip": "Radeon RX 7900 XT", "vramGb": 20, "lengthMm": 338, "recommendedPsuW": 750 }
   ],
   "psus": [
     { "name": "MWE 450 Bronze V2", "brand": "Cooler Master", "price": 1800, "tdp": 0, "wattage": 450, "efficiencyRating": "80+ Bronze", "isModular": false },
@@ -80,14 +80,14 @@
   "cases": [
     { "name": "4000D Airflow", "brand": "Corsair", "price": 4000, "tdp": 0, "supportedFormFactors": "ATX, MicroATX, MiniITX", "maxGpuLengthMm": 360, "maxCoolerHeightMm": 170 },
     { "name": "3000D Airflow", "brand": "Corsair", "price": 3000, "tdp": 0, "supportedFormFactors": "ATX, MicroATX, MiniITX", "maxGpuLengthMm": 360, "maxCoolerHeightMm": 170 },
-    { "name": "H5 Flow", "brand": "NZXT", "price": 3800, "tdp": 0, "supportedFormFactors": "ATX, MicroATX, MiniITX", "maxGpuLengthMm": 365, "maxCoolerHeightMm": 165 },
+    { "name": "H5 Flow (2024)", "brand": "NZXT", "price": 3800, "tdp": 0, "supportedFormFactors": "ATX, MicroATX, MiniITX", "maxGpuLengthMm": 410, "maxCoolerHeightMm": 170 },
     { "name": "Lancool 216", "brand": "Lian Li", "price": 4000, "tdp": 0, "supportedFormFactors": "ATX, MicroATX, MiniITX", "maxGpuLengthMm": 392, "maxCoolerHeightMm": 180 },
     { "name": "O11 Dynamic EVO", "brand": "Lian Li", "price": 6500, "tdp": 0, "supportedFormFactors": "ATX, MicroATX, MiniITX", "maxGpuLengthMm": 422, "maxCoolerHeightMm": 167 },
     { "name": "North", "brand": "Fractal Design", "price": 5500, "tdp": 0, "supportedFormFactors": "ATX, MicroATX, MiniITX", "maxGpuLengthMm": 355, "maxCoolerHeightMm": 170 },
     { "name": "Pure Base 500DX", "brand": "be quiet!", "price": 4200, "tdp": 0, "supportedFormFactors": "ATX, MicroATX, MiniITX", "maxGpuLengthMm": 369, "maxCoolerHeightMm": 190 },
     { "name": "MasterBox Q300L", "brand": "Cooler Master", "price": 1800, "tdp": 0, "supportedFormFactors": "MicroATX, MiniITX", "maxGpuLengthMm": 360, "maxCoolerHeightMm": 157 },
     { "name": "AIR 100 ARGB", "brand": "Montech", "price": 1900, "tdp": 0, "supportedFormFactors": "MicroATX, MiniITX", "maxGpuLengthMm": 330, "maxCoolerHeightMm": 161 },
-    { "name": "Pop Mini Air", "brand": "Fractal Design", "price": 3000, "tdp": 0, "supportedFormFactors": "MicroATX, MiniITX", "maxGpuLengthMm": 405, "maxCoolerHeightMm": 170 },
+    { "name": "Pop Mini Air", "brand": "Fractal Design", "price": 3000, "tdp": 0, "supportedFormFactors": "MicroATX, MiniITX", "maxGpuLengthMm": 365, "maxCoolerHeightMm": 170 },
     { "name": "MasterBox NR200P", "brand": "Cooler Master", "price": 3500, "tdp": 0, "supportedFormFactors": "MiniITX", "maxGpuLengthMm": 330, "maxCoolerHeightMm": 155 },
     { "name": "A4-H2O", "brand": "Lian Li", "price": 5000, "tdp": 0, "supportedFormFactors": "MiniITX", "maxGpuLengthMm": 322, "maxCoolerHeightMm": 55 }
   ],
